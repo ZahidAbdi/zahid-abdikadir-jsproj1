@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    input {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+
+<div id='container'>
+  <form>
+    <label for='fname'>First Name:</label>
+    <input type='text' id='fname' name='fname' />
+    <label for='lname'>Last Name:</label>
+    <input type='text' id='lname' name='lname' />
+    <label for='uid'>UserID:</label>
+    <input type='text' id='uid' name='uid' />
+    <label for='birthdate'>Birthday:</label>
+    <input
+            type='date'
+            id='birthday'
+            name='birthday'
+            min='1950-01-01'
+            max='2021-12-31'
+    />
+    <button id='btn' type='submit'>Accept</button>
+
+    <p id='message'></p>
+  </form>
+
+</div>
+
+<script>
+  document.getElementById('btn').addEventListener('click', e => {
+    e.preventDefault()
+    onSubmit()
+  })
+
+  // Accesses all user Inputs
+  let fname = document.getElementById('fname')
+  let lname = document.getElementById('lname')
+  let uid = document.getElementById('uid')
+  let birthday = document.getElementById('birthday')
+  let message = document.getElementById('message')
+
+
+  // handles all the functions
+  const onSubmit = () => {
+    //check if values are empty
+    if(fname.value === '') {
+      message.innerHTML =  'Invalid first name'
+      return
+    } else if (lname.value === '') {
+      message.innerHTML = 'Invalid last name'
+      return
+    } else if (uid.value === '') {
+      message.innerHTML = 'Invalid userId'
+      return
+    } else if  (!birthday.value) {
+      message.innerHTML = 'Invalid birth date'
+      return
+    }
+
+    // calling the functions
+    validate()
+  }
+
+  const validate = () => {
+    let id = uid.value
+    let date = dateDiff(birthday)
+    //Checks if id is long enough
+    if(id.length < 8 ) {
+      message.innerHTML = 'Invalid UserID: UserId is not long enough'
+      return
+    }
+    //Checks if id is too long
+    else if (id.length > 12) {
+      message.innerHTML = 'Invalid UserID: UserId is too long'
+      return
+    }
+
+    // check if theres a Uppercase
+    if (!hasUpperCase(id)){
+      message.innerHTML = 'Invalid UserID: UserId needs to have at least one uppercase letter'
+      return
+    }
+    // check if theres a lowercase
+    if (!hasLowerCase(id)){
+      message.innerHTML = 'Invalid UserID: UserId needs to have at least one lowercase letter'
+      return
+    }
+    // check if theres a number
+    if (!hasNumber(id)){
+      message.innerHTML = 'Invalid UserID: UserId needs to have at least one number'
+      return
+    }
+
+    //Checks if user is old enough
+    let days = `${fname.value} ${lname.value} you have been breathing for ${diff} days!`
+    if (date < 365 * 18) {
+      message.innerHTML = `${days} You're probably not old enough to take the class`
+    } else {
+      message.innerHTML = days
+    }
+  }
+
+
+
+  // Checking if id has upercase, lowercase and a number
+  const hasUpperCase = (input) => {
+    for (let i = 0; i < input.length; i++) {
+      if(input[i] === input[i].toUpperCase()) {
+        return true
+      }
+    }
+  }
+  const hasLowerCase = (input) => {
+    for (let i = 0; i < input.length; i++) {
+      if(input[i] === input[i].toLowerCase()) {
+        return true
+      }
+    }
+  }
+
+  const hasNumber = (input) => {
+    for (let i = 0; i < input.length; i++) {
+      if (parseInt(input[i]) >= 0) {
+        return true
+      }
+    }
+  }
+
+
+
+  // checking the date and returning the difference
+  const dateDiff = (bday) => {
+    // new Date() gets current date
+    let current = new Date()
+    // converts the string into a date
+    bday = new Date(birthday.value)
+    // subtracts the days since and rounds down
+    diff = Math.floor((current - bday) / (24 * 3600 * 1000))
+    return diff
+  }
+
+
+  const pyramid = () => {
+    // print 20 rows
+    let string = ''
+    for (let i = 0; i <= 20; i++) {
+      string = string.padStart( i , 'x' )
+
+      // printing it to the DOM
+      const newContent = document.createTextNode(string)
+      document.getElementById('container').append(newContent)
+      const newContent2 = document.createElement('br')
+      document.getElementById('container').append(newContent2)
+    }
+  }
+  pyramid()
+</script>
+
+</body>
+</html>
